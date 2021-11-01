@@ -11,15 +11,16 @@ public class PlayerMovement : MonoBehaviour
     Vector2 moveInput;
     Rigidbody2D rb;
     Animator animator;
-    Collider2D cd;
+    Collider2D bodyCollider;
+    BoxCollider2D feetCollider;
     private bool canClimb = false; 
     private float startGravity;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        cd = GetComponent<Collider2D>();
-
+        bodyCollider = GetComponent<Collider2D>();
+        feetCollider = GetComponent<BoxCollider2D>();
         startGravity = rb.gravityScale;
     }
     void Update()
@@ -27,20 +28,6 @@ public class PlayerMovement : MonoBehaviour
         Run();
         FlipSprite();
         ClimbLadder();
-    }
-
-    private void ClimbLadder()
-    {
-        if (!cd.IsTouchingLayers(LayerMask.GetMask("Ladder")))
-        {
-            rb.gravityScale = startGravity;
-            return;
-        }
-
-    
-        rb.velocity = new Vector2(rb.velocity.x, moveInput.y * climbSpeed);
-        rb.gravityScale = 0f;
-        
     }
 
     private void FlipSprite()
@@ -62,10 +49,27 @@ public class PlayerMovement : MonoBehaviour
 
     void OnJump(InputValue value)
     {
-        if (cd.IsTouchingLayers(LayerMask.GetMask("Ground")) && value.isPressed)
+        if (feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")) && value.isPressed)
         {
             rb.velocity += new Vector2(0f, JumpHeight);
         }
+    }
+    private void ClimbLadder()
+    {
+        if (!feetCollider.IsTouchingLayers(LayerMask.GetMask("Ladder")))
+        {
+            rb.gravityScale = startGravity;
+            animator.SetBool("isClimbing", false);
+            return;
+        }
+
+    
+        rb.velocity = new Vector2(rb.velocity.x, moveInput.y * climbSpeed);
+        rb.gravityScale = 0f;
+
+
+        bool playHasVerticalSpeed = Mathf.Abs(rb.velocity.y) > Mathf.Epsilon;
+        animator.SetBool("isClimbing", playHasVerticalSpeed);
     }
 
     private void Run()
