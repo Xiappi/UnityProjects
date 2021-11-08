@@ -14,10 +14,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float JumpHeight;
     [SerializeField] float climbSpeed = 1f;
     [SerializeField] float ReloadDelay = 3f;
-    [SerializeField] GameObject Arrow, HeartsParent;
+    [SerializeField] GameObject Arrow, HeartsParent, RespawnPoint;
+    private GameObject currentPlatform;
+    private Vector3 lastPlatformPosition;
     private Image[] hearts;
     [SerializeField] Transform Bow;
-    [SerializeField] GameObject RespawnPoint;
     Vector2 moveInput;
     Rigidbody2D rb;
     CapsuleCollider2D bodyCollider, feetCollider;
@@ -51,6 +52,8 @@ public class PlayerMovement : MonoBehaviour
         Move();
         FlipSprite();
         ClimbLadder();
+        PlatformLogic();
+
     }
 
     private void FlipSprite()
@@ -115,6 +118,18 @@ public class PlayerMovement : MonoBehaviour
         if (isAlive && other.gameObject.tag == "Enemy")
         {
             TakeDamage();
+        }
+        else if (other.gameObject.tag == "Platform")
+        {
+            currentPlatform = other.gameObject;
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D other)
+    {
+        if (other.gameObject.tag == "Platform")
+        {
+            currentPlatform = null;
         }
     }
 
@@ -181,4 +196,17 @@ public class PlayerMovement : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+    private void PlatformLogic()
+    {
+        if(currentPlatform != null)
+        lastPlatformPosition = currentPlatform.transform.position;
+    }
+
+    void LateUpdate()
+    {
+        if(currentPlatform != null){
+            rb.velocity += new Vector2(currentPlatform.GetComponent<Rigidbody2D>().velocity.x,0);
+        }
+    }   
 }
