@@ -16,7 +16,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float ReloadDelay = 3f;
     [SerializeField] GameObject Arrow, HeartsParent, RespawnPoint;
     private GameObject currentPlatform;
-    private Vector3 lastPlatformPosition;
     private Image[] hearts;
     [SerializeField] Transform Bow;
     Vector2 moveInput;
@@ -52,7 +51,6 @@ public class PlayerMovement : MonoBehaviour
         Move();
         FlipSprite();
         ClimbLadder();
-        PlatformLogic();
 
     }
 
@@ -106,7 +104,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        bool playHasHorizontalSpeed = Mathf.Abs(rb.velocity.x) > Mathf.Epsilon;
+        bool playHasHorizontalSpeed = Mathf.Abs(rb.velocity.x) > Mathf.Epsilon && rb.velocity.x != currentPlatform?.GetComponent<Rigidbody2D>().velocity.x;
         playerAnimator.RunAnimation(playHasHorizontalSpeed);
 
         var playerVelocity = new Vector2(moveInput.x * MoveSpeed, rb.velocity.y);
@@ -163,7 +161,9 @@ public class PlayerMovement : MonoBehaviour
     void OnFire(InputValue value)
     {
         // when moving on X axis, Y velocity is very small (i suspect a slightly sloped tilemap), so we compare against a small number
-        if (!isAlive || isFiring || Mathf.Abs(rb.velocity.y) > 0.0001) return;
+        if (!isAlive || isFiring || Mathf.Abs(rb.velocity.y) > 0.0001)
+            return;
+
         isFiring = true;
         StartCoroutine("Fire");
     }
@@ -175,7 +175,6 @@ public class PlayerMovement : MonoBehaviour
         Instantiate(Arrow, Bow.position, transform.rotation);
         yield return new WaitForSeconds(0.5f);
         isFiring = false;
-
     }
 
     private async Task UpdateRespawnPoint()
@@ -197,16 +196,11 @@ public class PlayerMovement : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    private void PlatformLogic()
-    {
-        if(currentPlatform != null)
-        lastPlatformPosition = currentPlatform.transform.position;
-    }
-
     void LateUpdate()
     {
-        if(currentPlatform != null){
-            rb.velocity += new Vector2(currentPlatform.GetComponent<Rigidbody2D>().velocity.x,0);
+        if (currentPlatform != null)
+        {
+            rb.velocity += new Vector2(currentPlatform.GetComponent<Rigidbody2D>().velocity.x, 0);
         }
-    }   
+    }
 }

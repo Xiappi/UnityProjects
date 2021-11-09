@@ -894,6 +894,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1442216941}
   - component: {fileID: 1442216940}
+  - component: {fileID: 1442216942}
   m_Layer: 0
   m_Name: Tilemap Grid
   m_TagString: Untagged
@@ -933,6 +934,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1442216942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1442216939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d008a12910fa842b94e05bfa76ed90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Template: {fileID: 0}
 --- !u!1 &1444383969
 GameObject:
   m_ObjectHideFlags: 0
@@ -24455,11 +24469,11 @@ PrefabInstance:
       objectReference: {fileID: 1857568229}
     - target: {fileID: 1899013598, guid: 10504a767a198e14aa7eb80de58a7773, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15.837011
+      value: -15.835146
       objectReference: {fileID: 0}
     - target: {fileID: 1899013598, guid: 10504a767a198e14aa7eb80de58a7773, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -12.835634
+      value: -12.835632
       objectReference: {fileID: 0}
     - target: {fileID: 2535951670780192174, guid: 10504a767a198e14aa7eb80de58a7773, type: 3}
       propertyPath: m_RootOrder
@@ -24508,6 +24522,10 @@ PrefabInstance:
     - target: {fileID: 2535951670780192177, guid: 10504a767a198e14aa7eb80de58a7773, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 2535951670780192177, guid: 10504a767a198e14aa7eb80de58a7773, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2535951670808514471, guid: 10504a767a198e14aa7eb80de58a7773, type: 3}
       propertyPath: HeartsParent

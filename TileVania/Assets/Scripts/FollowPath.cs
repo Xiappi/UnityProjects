@@ -35,25 +35,15 @@ public class FollowPath : MonoBehaviour
         currentPositionHolder = pathNodes[currentNode].position;
     }
 
-    void OnCollisionEnter2D(Collision2D other)
-    {
-        if (other.gameObject.tag == "Player")
-        {
-        }
-    }
 
     // Update is called once per frame
     void Update()
     {
         timer += Time.deltaTime * MoveSpeed;
-        // Debug.Log(Vector3.Distance(gameObject.transform.position,currentPositionHolder));
-
-        // if(gameObject.transform.position != currentPositionHolder){
 
         var distance = Vector3.Distance(gameObject.transform.position, currentPositionHolder);
         if (distance > 0.5f && distance != 0)
         {
-            // gameObject.transform.position = Vector3.Lerp(startPosition, currentPositionHolder, timer);
             var dir_x = currentPositionHolder.x - startPosition.x;
             var dir_y = currentPositionHolder.y - startPosition.y;
 
@@ -65,7 +55,7 @@ public class FollowPath : MonoBehaviour
         }
         else
         {
-            if (currentNode == pathNodes.Count -1 || (returning && currentNode == 0))
+            if (currentNode == pathNodes.Count - 1 || (returning && currentNode == 0))
             {
                 switch (pathType)
                 {
