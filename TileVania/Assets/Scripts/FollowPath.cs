@@ -23,6 +23,9 @@ public class FollowPath : MonoBehaviour
 
     void Start()
     {
+        if (PathParent == null)
+            return;
+
         pathNodes = PathParent.GetComponentsInChildren<Transform>().ToList();
         pathNodes.RemoveAt(0);
         CheckNode();
@@ -39,6 +42,10 @@ public class FollowPath : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (PathParent == null)
+            return;
+
         timer += Time.deltaTime * MoveSpeed;
 
         var distance = Vector3.Distance(gameObject.transform.position, currentPositionHolder);

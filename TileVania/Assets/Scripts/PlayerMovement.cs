@@ -73,7 +73,7 @@ public class PlayerMovement : MonoBehaviour
     void OnJump(InputValue value)
     {
         if (!isAlive) return;
-        if (feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")) && value.isPressed)
+        if (IsAllowedToDoActions() && value.isPressed)
         {
             rb.velocity += new Vector2(0f, JumpHeight);
         }
@@ -161,7 +161,7 @@ public class PlayerMovement : MonoBehaviour
     void OnFire(InputValue value)
     {
         // when moving on X axis, Y velocity is very small (i suspect a slightly sloped tilemap), so we compare against a small number
-        if (!isAlive || isFiring || Mathf.Abs(rb.velocity.y) > 0.0001)
+        if (!isAlive || isFiring || !IsAllowedToDoActions())
             return;
 
         isFiring = true;
@@ -190,6 +190,13 @@ public class PlayerMovement : MonoBehaviour
 
         }
     }
+
+    // allow actions (jump, fire, roll, etc) when touching certain layers
+    private bool IsAllowedToDoActions()
+    {
+        return feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")) || feetCollider.IsTouchingLayers(LayerMask.GetMask("Platform"));
+    }
+
 
     private void ReloadScene()
     {

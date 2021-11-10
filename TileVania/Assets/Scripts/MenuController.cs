@@ -7,10 +7,12 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEditor;
 using System.Linq;
+using System;
 
 public class MenuController : MonoBehaviour
 {
     [SerializeField] GameObject Template;
+    [SerializeField] Sprite DefaultImage;
 
     private GridLayout gridLayout;
 
@@ -18,39 +20,48 @@ public class MenuController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        PopulateScenes();
+    }
 
+    private void PopulateScenes()
+    {
         var scenes = EditorBuildSettings.scenes
                     .Where(scene => scene.enabled)
                     .Select(scene => scene.path)
+                    .Where(scene => scene.Contains("Level"))
                     .ToArray();
 
-        var path = @"C:\Users\matta\Unity\TileVania\Assets\Scenes\Screenshots\Level 1.png";
-        var bytes = System.IO.File.ReadAllBytes(path);
-        var texture = new Texture2D(1, 1);
-        texture.LoadImage(bytes);
-        var sceneSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-        gridLayout = GetComponent<GridLayout>();
-
+        // lots of gross string manipulation 
         foreach (var scene in scenes)
         {
-            Template.GetComponent<Image>().sprite = sceneSprite;
-            Template.GetComponentInChildren<TextMeshProUGUI>().text = scene;
-            Instantiate(Template, transform);
+            var sceneFileName = scene.Substring(scene.LastIndexOf('/') + 1, scene.Length - scene.IndexOf('.') + 1);
+            var path = Path.Combine("Assets/Scenes/Screenshots", (sceneFileName + ".png"));
+            Sprite sceneSprite;
+            try
+            {
+                var bytes = System.IO.File.ReadAllBytes(path);
+                var texture = new Texture2D(1, 1);
+                texture.LoadImage(bytes);
+
+                sceneSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+            }
+            catch (Exception)
+            {
+                sceneSprite = DefaultImage;
+            }
+
+            gridLayout = GetComponent<GridLayout>();
+
+            var gameObj = Instantiate(Template, transform);
+            gameObj.GetComponent<Image>().sprite = sceneSprite;
+            gameObj.GetComponentInChildren<TextMeshProUGUI>().text = sceneFileName;
+            gameObj.GetComponent<Button>().onClick.AddListener(() => LoadScene(scene));
         }
-
-
     }
 
-    // Update is called once per frame
-    void Update()
+    public void LoadScene(string str)
     {
-
+        SceneManager.LoadScene(SceneUtility.GetBuildIndexByScenePath(str));
     }
-
-    public void StartGame()
-    {
-        SceneManager.LoadScene(1);
-    }
-
 
 }
