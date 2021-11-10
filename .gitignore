@@ -72,5 +72,8 @@ crashlytics-build.properties
 
 *.[Ll]og
 [Ll]ogs
+
 Artifacts
 ArtifactDB
+
+Library
