@@ -259,7 +259,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1899013597}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -22.057796, y: -12.856194, z: -10}
+  m_LocalPosition: {x: -15.751034, y: -12.316534, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1634217810}
@@ -556,7 +556,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 718502819
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 1857188551261513057, guid: 5647f1d2b77fb0141806e29a7463f469, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -648,14 +648,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0894efd1bc4bd4c4d8d4f4ca1c6da825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 10
-  JumpHeight: 24
+  MoveSpeed: 8
+  JumpHeight: 22
   climbSpeed: 6
   ReloadDelay: 3
   Arrow: {fileID: 4632045444844755914, guid: 454333d4406808d48a93b2f19cd6b282, type: 3}
   HeartsParent: {fileID: 0}
-  Bow: {fileID: 2535951670675804228}
   RespawnPoint: {fileID: 2535951671408054381}
+  Bow: {fileID: 2535951670675804228}
 --- !u!114 &2535951670808514470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -737,7 +737,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 718502819
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: -6255873791086419314, guid: e23084f7659136c4fad898e0aa25e705, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

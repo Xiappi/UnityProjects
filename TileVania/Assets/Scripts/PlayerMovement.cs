@@ -113,7 +113,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        if (isAlive && other.gameObject.tag == "Enemy")
+        if (isAlive && other.gameObject.tag == "Enemy" || rb.IsTouchingLayers(LayerMask.GetMask("Hazard")))
         {
             TakeDamage();
         }

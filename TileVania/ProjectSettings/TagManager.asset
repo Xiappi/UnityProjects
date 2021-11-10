@@ -53,6 +53,9 @@ TagManager:
   - name: Interactables
     uniqueID: 1538537121
     locked: 0
+  - name: Platforms
+    uniqueID: 2919208505
+    locked: 0
   - name: Player
     uniqueID: 718502819
     locked: 0

@@ -25,11 +25,12 @@ public class MenuController : MonoBehaviour
 
     private void PopulateScenes()
     {
-        var scenes = EditorBuildSettings.scenes
-                    .Where(scene => scene.enabled)
-                    .Select(scene => scene.path)
-                    .Where(scene => scene.Contains("Level"))
-                    .ToArray();
+        var rawScenes = new List<string>();
+        for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+        {
+            rawScenes.Add(SceneUtility.GetScenePathByBuildIndex(i));
+        }
+        var scenes = rawScenes.Where(scene => scene.Contains("Level"));
 
         // lots of gross string manipulation 
         foreach (var scene in scenes)
