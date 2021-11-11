@@ -8,15 +8,11 @@ using UnityEngine.UI;
 using System.Linq;
 using System.Threading.Tasks;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
-    [SerializeField] float MoveSpeed = 1f;
-    [SerializeField] float JumpHeight;
-    [SerializeField] float climbSpeed = 1f;
+    [SerializeField] float MoveSpeed, JumpHeight, ClimbSpeed = 1f;
     [SerializeField] float ReloadDelay = 3f;
     [SerializeField] GameObject Arrow, HeartsParent, RespawnPoint;
-    private GameObject currentPlatform;
-    private Image[] hearts;
     [SerializeField] Transform Bow;
     Vector2 moveInput;
     Rigidbody2D rb;
@@ -25,6 +21,9 @@ public class PlayerMovement : MonoBehaviour
     private bool isAlive = true;
     private bool isFiring = false;
     private float startGravity;
+    private GameObject currentPlatform;
+    private Image[] hearts;
+    private AudioController audioController;
     void Start()
     {
 
@@ -38,6 +37,8 @@ public class PlayerMovement : MonoBehaviour
         // I hate this but I don't know an elegant way of differentiating multiple types of components
         bodyCollider = GetComponent<CapsuleCollider2D>();
         feetCollider = GetComponentsInChildren<CapsuleCollider2D>().Where(c => c.tag != "Player").First();
+
+        audioController = FindObjectOfType<AudioController>();
 
         // fire and forget task to keep track of respawn point
 #pragma warning disable CS4014
@@ -75,6 +76,7 @@ public class PlayerMovement : MonoBehaviour
         if (!isAlive) return;
         if (IsAllowedToDoActions() && value.isPressed)
         {
+            audioController.PlayerJump();
             rb.velocity += new Vector2(0f, JumpHeight);
         }
     }
@@ -89,7 +91,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        rb.velocity = new Vector2(rb.velocity.x, moveInput.y * climbSpeed);
+        rb.velocity = new Vector2(rb.velocity.x, moveInput.y * ClimbSpeed);
         rb.gravityScale = 0f;
 
         bool playHasVerticalSpeed = Mathf.Abs(rb.velocity.y) > Mathf.Epsilon;
