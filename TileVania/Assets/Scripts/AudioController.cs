@@ -21,8 +21,13 @@ public class AudioController : MonoBehaviour
 
     }
 
-    internal void PlayerJump()
+    internal void PlayerJumpSound()
     {
         audioSources[1].Play();
+    }
+
+    internal void PlayerFireSound()
+    {
+        audioSources[2].Play();
     }
 }

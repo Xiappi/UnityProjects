@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] float MoveSpeed, JumpHeight, ClimbSpeed = 1f;
+    [SerializeField] float MoveSpeed, JumpHeight, ClimbSpeed, FireDelay = 1f;
     [SerializeField] float ReloadDelay = 3f;
     [SerializeField] GameObject Arrow, HeartsParent, RespawnPoint;
     [SerializeField] Transform Bow;
@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
         if (!isAlive) return;
         if (IsAllowedToDoActions() && value.isPressed)
         {
-            audioController.PlayerJump();
+            audioController?.PlayerJumpSound();
             rb.velocity += new Vector2(0f, JumpHeight);
         }
     }
@@ -173,9 +173,10 @@ public class PlayerController : MonoBehaviour
     private IEnumerator Fire()
     {
         isFiring = true;
+        audioController?.PlayerFireSound();
         playerAnimator.FireAnimation();
         Instantiate(Arrow, Bow.position, transform.rotation);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(FireDelay);
         isFiring = false;
     }
 
