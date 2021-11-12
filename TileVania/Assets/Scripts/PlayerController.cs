@@ -19,9 +19,8 @@ public class PlayerController : MonoBehaviour
     CapsuleCollider2D bodyCollider, feetCollider;
     private PlayerAnimation playerAnimator;
     private bool isAlive = true;
-    private bool isFiring = false;
+    private bool isFiring, isMoving = false;
     private float startGravity;
-    private GameObject currentPlatform;
     private Image[] hearts;
     private AudioController audioController;
     void Start()
@@ -66,11 +65,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void OnMove(InputValue value)
-    {
-        moveInput = value.Get<Vector2>();
-    }
-
     void OnJump(InputValue value)
     {
         if (!isAlive) return;
@@ -98,15 +92,19 @@ public class PlayerController : MonoBehaviour
         playerAnimator.ClimbAnimation(playHasVerticalSpeed);
     }
 
+    void OnMove(InputValue value)
+    {
+        moveInput = value.Get<Vector2>();
+    }
+
     private void Move()
     {
-        if (isFiring)
+        if (isFiring && feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
         {
-            rb.velocity = new Vector2(0, 0);
-            return;
+            // TODO: create run and fire animation
         }
 
-        bool playHasHorizontalSpeed = Mathf.Abs(rb.velocity.x) > Mathf.Epsilon && rb.velocity.x != currentPlatform?.GetComponent<Rigidbody2D>().velocity.x;
+        bool playHasHorizontalSpeed = Mathf.Abs(moveInput.x) > 0;
         playerAnimator.RunAnimation(playHasHorizontalSpeed);
 
         var playerVelocity = new Vector2(moveInput.x * MoveSpeed, rb.velocity.y);
@@ -119,18 +117,11 @@ public class PlayerController : MonoBehaviour
         {
             TakeDamage();
         }
-        else if (other.gameObject.tag == "Platform")
-        {
-            currentPlatform = other.gameObject;
-        }
     }
 
     void OnCollisionExit2D(Collision2D other)
     {
-        if (other.gameObject.tag == "Platform")
-        {
-            currentPlatform = null;
-        }
+
     }
 
     private void TakeDamage()
@@ -162,8 +153,7 @@ public class PlayerController : MonoBehaviour
 
     void OnFire(InputValue value)
     {
-        // when moving on X axis, Y velocity is very small (i suspect a slightly sloped tilemap), so we compare against a small number
-        if (!isAlive || isFiring || !IsAllowedToDoActions())
+        if (!isAlive || isFiring)
             return;
 
         isFiring = true;
@@ -206,11 +196,5 @@ public class PlayerController : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    void LateUpdate()
-    {
-        if (currentPlatform != null)
-        {
-            rb.velocity += new Vector2(currentPlatform.GetComponent<Rigidbody2D>().velocity.x, 0);
-        }
-    }
+
 }

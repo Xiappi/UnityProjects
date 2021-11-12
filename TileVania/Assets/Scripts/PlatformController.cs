@@ -1,8 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-public class FollowPath : MonoBehaviour
+public class PlatformController : MonoBehaviour
 {
 
     public enum PathType
@@ -14,6 +13,7 @@ public class FollowPath : MonoBehaviour
     [SerializeField] PathType pathType;
     [SerializeField] GameObject PathParent;
     [SerializeField] float MoveSpeed;
+
     private List<Transform> pathNodes;
     private Vector3 currentPositionHolder, startPosition;
     private int currentNode = 0;
@@ -21,8 +21,12 @@ public class FollowPath : MonoBehaviour
     private float timer = 0f;
     private bool returning = false;
 
+    private GameObject currentObjectOnPlatform;
+    private Rigidbody2D rb;
     void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
+
         if (PathParent == null)
             return;
 
@@ -38,11 +42,41 @@ public class FollowPath : MonoBehaviour
         currentPositionHolder = pathNodes[currentNode].position;
     }
 
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            currentObjectOnPlatform = other.gameObject;
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D other)
+    {
+        currentObjectOnPlatform.GetComponent<Rigidbody2D>().velocity += rb.velocity;
+        currentObjectOnPlatform = null;
+    }
 
     // Update is called once per frame
     void Update()
     {
+        MoveAlongPath();
+    }
 
+    void LateUpdate()
+    {
+        if (currentObjectOnPlatform == null)
+            return;
+        var otherRb = currentObjectOnPlatform.GetComponent<Rigidbody2D>();
+        otherRb.velocity += new Vector2(rb.velocity.x, 0);
+    }
+
+    void MoveObjectOnPlatform()
+    {
+        MoveObjectOnPlatform();
+    }
+
+    private void MoveAlongPath()
+    {
         if (PathParent == null)
             return;
 
@@ -78,7 +112,5 @@ public class FollowPath : MonoBehaviour
             currentNode += moveDirection;
             CheckNode();
         }
-
     }
-
 }

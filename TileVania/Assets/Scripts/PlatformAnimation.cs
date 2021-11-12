@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlatformAnimation : MonoBehaviour
 {
     private Rigidbody2D rb;
-    private float rotationSpeed = 0.5f;
+    private float rotationSpeed = 200f;
     void Start()
     {
         rb = GetComponentInParent<Rigidbody2D>();
@@ -15,12 +15,12 @@ public class PlatformAnimation : MonoBehaviour
         if (rb.velocity.x != 0)
         {
             var rotationDirection = Mathf.Sign(rb.velocity.x);
-            transform.Rotate(new Vector3(0, 0, rotationSpeed * rotationDirection));
+            transform.Rotate(new Vector3(0, 0, rotationSpeed * rotationDirection * Time.deltaTime));
         }
         else if (rb.velocity.y != 0)
         {
             var rotationDirection = Mathf.Sign(rb.velocity.y);
-            transform.Rotate(new Vector3(0, 0, rotationSpeed * rotationDirection));
+            transform.Rotate(new Vector3(0, 0, rotationSpeed * rotationDirection * Time.deltaTime));
         }
 
 
